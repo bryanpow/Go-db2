@@ -1,36 +1,40 @@
 package db
 import (
-
 	"sync"
 )
 
 type db struct {
-	store map[string]string
+	Store map[string]string
 	lock sync.RWMutex
+	filename string
 }
 
-func NewDb() *db {
+func NewDb(filename string) *db {
 	return &db{
-		store: make(map[string]string),
+		Store: make(map[string]string),
+		filename: filename,
 	}
 }
 
 func (db *db) Set(key, value string) {
 	db.lock.Lock()
-	db.store[key] = value 
-	db.lock.Unlock()
+	defer db.lock.Unlock()
+	db.Store[key] = value 
+	
 }
 
 func (db *db) Get(key string) (string, bool) {
 	db.lock.RLock()
-	value, exists := db.store[key]
-	db.lock.RUnlock()
+	defer db.lock.RUnlock()
+	value, exists := db.Store[key]
 	return value, exists
 
 }
 
 func (db *db) Delete(key string) {
 	db.lock.Lock()
-	delete(db.store, key)
-	db.lock.Unlock()
+	defer db.lock.Unlock()
+	delete(db.Store, key)
 }
+
+
