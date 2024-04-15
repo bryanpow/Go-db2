@@ -1,7 +1,7 @@
 package db
 
 import (
-	"encoding/json"
+	"google.golang.org/protobuf/proto"
 	"io/ioutil"
 	"os"
 )
@@ -9,7 +9,7 @@ import (
 
 // Function for saving db data to file for persistant saves
 func (db *db) Save() error {
-	data, err := json.Marshal(db.Store)
+	data, err := proto.Marshal(db.Database)
 	if err != nil {
 		return err
 	}
@@ -18,7 +18,7 @@ func (db *db) Save() error {
 }
 
 
-// Function for loading persistent data from json file, and populating the key value store with that data
+
 func (db *db) Load() error {
 	data, err := ioutil.ReadFile(db.filename)
 	if err != nil {
@@ -29,8 +29,8 @@ func (db *db) Load() error {
 		}
 	}
 
-	// Decoding to json
-	err = json.Unmarshal(data, &db.Store)
+	// Decoding from proocol buffer
+	err = proto.Unmarshal(data, db.Database)
 
 	if err != nil {
 		return err

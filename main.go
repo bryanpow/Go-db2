@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"go_db/db"
 )
 
@@ -9,32 +10,39 @@ import (
 
 func main() {
 	// Create a new DB instance
-	db := db.NewDb("test.db")
+	database := db.NewDb("my_database.db")
 
-	// Set some key-value pairs
-	db.Set("key1", "value1")
-	db.Set("key2", "value2")
-	db.Set("key3", "value3")
-	db.Set("apple", "1")
-	db.Set("Bryan", "cool")
-	db.Set("bruh", "value3")
-	// Save the DB to a file
-	err := db.Save()
+	// Set some data in the database
+	database.Set("username", "john_doe")
+	database.Set("email", "john@example.com")
+
+	// Save the current state of the database
+	err := database.Save()
 	if err != nil {
-		fmt.Println(err)
-		return
+		log.Fatalf("Failed to save database: %v", err)
 	}
 
-	// Load the DB from the file
-	err = db.Load()
+	// Create a new database instance to test loading from file
+	newDatabase := db.NewDb("my_database.db")
+
+	// Load the data into the new database instance
+	err = newDatabase.Load()
 	if err != nil {
-		fmt.Println(err)
-		return
+		log.Fatalf("Failed to load database: %v", err)
 	}
 
-	// Print out the loaded DB
-	for key, value := range db.Store {
-		fmt.Printf("%s: %s\n", key, value)
+	// Retrieve the data from the new database instance
+	username, _ := newDatabase.Get("username")
+	email, _ := newDatabase.Get("email")
+
+
+	fmt.Printf("Username: %s\n", username)
+	fmt.Printf("Email: %s\n", email)
+
+
+	if username != "john_doe" || email != "john@example.com" {
+		log.Fatalf("Data did not persist as expected")
+	} else {
+		fmt.Println("Data persisted successfully.")
 	}
-	
 }

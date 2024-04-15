@@ -8,7 +8,7 @@ import (
 //  Lock for concurrent actions
 //  Filename for saving to disk (add prototype)
 type db struct {
-	Store map[string]string
+	*Database
 	lock sync.RWMutex
 	filename string
 }
@@ -17,9 +17,11 @@ type db struct {
 //Fucntion for making new database
 func NewDb(filename string) *db {
 	return &db{
-		Store: make(map[string]string),
-		filename: filename,
-	}
+        Database: &Database{
+            Store: make(map[string]string), 
+        },
+        filename: filename,
+    }
 }
 
 
@@ -37,7 +39,6 @@ func (db *db) Get(key string) (string, bool) {
 	defer db.lock.RUnlock()
 	value, exists := db.Store[key]
 	return value, exists
-
 }
 
 
