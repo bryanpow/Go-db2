@@ -3,12 +3,18 @@ import (
 	"sync"
 )
 
+
+//  Struct for database.
+//  Lock for concurrent actions
+//  Filename for saving to disk (add prototype)
 type db struct {
 	Store map[string]string
 	lock sync.RWMutex
 	filename string
 }
 
+
+//Fucntion for making new database
 func NewDb(filename string) *db {
 	return &db{
 		Store: make(map[string]string),
@@ -16,6 +22,8 @@ func NewDb(filename string) *db {
 	}
 }
 
+
+// Function for setting new item in the database
 func (db *db) Set(key, value string) {
 	db.lock.Lock()
 	defer db.lock.Unlock()
@@ -23,6 +31,7 @@ func (db *db) Set(key, value string) {
 	
 }
 
+// Function for getting item from the database
 func (db *db) Get(key string) (string, bool) {
 	db.lock.RLock()
 	defer db.lock.RUnlock()
@@ -31,6 +40,8 @@ func (db *db) Get(key string) (string, bool) {
 
 }
 
+
+// Function for deleting item in database
 func (db *db) Delete(key string) {
 	db.lock.Lock()
 	defer db.lock.Unlock()
