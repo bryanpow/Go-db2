@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: godbtest
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: godbtest
+  template:
+    metadata:
+      labels:
+        app: godbtest
+    spec:
+      containers:
+      - name: godbtest
+        image: gcr.io/canvas-epigram-426910-s5
+        ports:
+        - containerPort: 8080
+        volumeMounts:
+        - mountPath: /app
+          name: data-storage
+      volumes:
+      - name: data-storage
+        persistentVolumeClaim:
+          claimName: pvc-data

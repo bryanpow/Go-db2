@@ -3,6 +3,8 @@ package db
 import (
 	"testing"
 	"os"
+	"github.com/stretchr/testify/assert"
+    "github.com/stretchr/testify/require"
 )
 
 
@@ -163,3 +165,36 @@ func TestWriteAheadLog(t *testing.T) {
     os.Remove("test_database_file")
     os.Remove("test_database_file_wal")
 }
+func TestMonitorShards(t *testing.T) {
+    // Create primary and replica databases
+    primary := NewDb("primary.db")
+    err := primary.Set("healthcheck", "ok")
+    require.NoError(t, err)
+
+    replica1 := NewDb("replica1.db")
+    replica2 := NewDb("replica2.db")
+
+    shard := &Shard{
+        Database: primary,
+        Replicas: []*db{replica1, replica2},
+    }
+
+    sdb := &ShardedDB{
+        Shards: []*Shard{shard},
+    }
+
+    // Simulate shard failure by deleting the healthcheck key
+    err = primary.Delete("healthcheck")
+    require.NoError(t, err)
+
+    // Monitor and promote replica
+    sdb.MonitorShards()
+
+    // Assert that the primary database is promoted from replicas
+    assert.Equal(t, replica1, shard.Database)
+
+    // Ensure the replica1 is no longer in the replica list
+    require.Len(t, shard.Replicas, 1)
+    assert.Equal(t, replica2, shard.Replicas[0])
+}
+
