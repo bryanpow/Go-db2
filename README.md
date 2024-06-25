@@ -1,6 +1,6 @@
-# Golang DB From Scratch
+# Golang key-value DB From Scratch
 
-This project aims to build a distributed database from scratch in Golang, featuring essential functionalities such as sharding, replication, write-ahead logging (WAL), and persistent storage using protocol buffers. The goal is was start with basic key-value store functionality and progressively enhance it by adding more complex features, which is what im continuing to do
+This project aims to build a distributed nosql database from scratch in Golang, featuring essential functionalities such as sharding, replication, write-ahead logging (WAL), and persistent storage using protocol buffers. The goal is was start with basic key-value store functionality and progressively enhance it by adding more complex features, which is what im continuing to do
 
 ## CURRENT FEATURES
 * Key-Value Store: Initial implementation with a simple map for storing key-value pairs.
