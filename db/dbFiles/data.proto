@@ -1,0 +1,7 @@
+syntax = "proto3";
+
+package db;
+option go_package = "/";
+message Database {
+    map<string, string> store = 1;
+};
