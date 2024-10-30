@@ -2,7 +2,7 @@
 
 This project aims to build a distributed nosql database from scratch in Golang, featuring essential functionalities such as sharding, replication, write-ahead logging (WAL), and persistent storage using protocol buffers. The goal is was start with basic key-value store functionality and progressively enhance it by adding more complex features, which is what im continuing to do
 
-## CURRENT FEATURES
+## FEATURES
 * Key-Value Store: Initial implementation with a simple map for storing key-value pairs.
 * Sharding: Distribution of data across multiple shards to ensure efficient data management and scalability.
 * Replication: Ensuring data availability and fault tolerance by replicating data across multiple nodes.
